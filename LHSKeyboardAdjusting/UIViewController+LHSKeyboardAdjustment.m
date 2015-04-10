@@ -21,14 +21,14 @@
                                                object:hide];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(lhs_keyboardDidShow:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:show];;
+                                             selector:@selector(lhs_keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:show];
 }
 
 - (void)lhs_deactivateKeyboardAdjustment {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)lhs_keyboardWillHide:(NSNotification *)sender {
@@ -46,7 +46,7 @@
     }
 }
 
-- (void)lhs_keyboardDidShow:(NSNotification *)sender {
+- (void)lhs_keyboardWillShow:(NSNotification *)sender {
     BOOL enabled = [self respondsToSelector:@selector(keyboardAdjustingBottomConstraint)];
     NSAssert(enabled, @"keyboardAdjustingBottomConstraint must be implemented to enable automatic keyboard adjustment.");
     
