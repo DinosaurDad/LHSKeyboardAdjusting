@@ -21,14 +21,14 @@
                                                object:hide];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(lhs_keyboardDidShow:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:show];;
+                                             selector:@selector(lhs_keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:show];
 }
 
 - (void)lhs_deactivateKeyboardAdjustment {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
 }
 
 - (void)lhs_keyboardWillHide:(NSNotification *)sender {
@@ -54,12 +54,12 @@
         }
         else
         {
-            [self.view layoutIfNeeded];
-        }
+        [self.view layoutIfNeeded];
+    }
     }
 }
 
-- (void)lhs_keyboardDidShow:(NSNotification *)sender {
+- (void)lhs_keyboardWillShow:(NSNotification *)sender {
     BOOL enabled = [self respondsToSelector:@selector(keyboardAdjustingBottomConstraint)];
     NSAssert(enabled, @"keyboardAdjustingBottomConstraint must be implemented to enable automatic keyboard adjustment.");
     
@@ -70,12 +70,12 @@
         }
         
         CGRect frame = [sender.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGRect keyboardFrameInViewCoordinates = [self.view convertRect:frame fromView:nil];
+        CGRect newFrame = [self.view convertRect:frame fromView:[[UIApplication sharedApplication] delegate].window];
+        self.keyboardAdjustingBottomConstraint.constant = newFrame.origin.y - CGRectGetHeight(self.view.frame);
+
         NSDictionary *userInfo = sender.userInfo;
         NSTimeInterval duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         UIViewAnimationCurve curve = (UIViewAnimationCurve) [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
-
-        self.keyboardAdjustingBottomConstraint.constant = CGRectGetHeight(self.view.bounds) - keyboardFrameInViewCoordinates.origin.y;
 
         if(self.keyboardAdjustingAnimated) {
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
