@@ -48,8 +48,9 @@
         
         self.keyboardAdjustingBottomConstraint.constant = 0;
         if(self.keyboardAdjustingAnimated) {
+            __weak UIViewController *weakSelf = self;
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-                [self.view layoutIfNeeded];
+                [weakSelf.view layoutIfNeeded];
             } completion:nil];
         }
         else
@@ -78,8 +79,9 @@
         UIViewAnimationCurve curve = (UIViewAnimationCurve) [userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue];
 
         if(self.keyboardAdjustingAnimated) {
+            __weak UIViewController *weakSelf = self;
             [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionBeginFromCurrentState | curve animations:^{
-                [self.view layoutIfNeeded];
+                [weakSelf.view layoutIfNeeded];
             } completion:nil];
         }
         else
