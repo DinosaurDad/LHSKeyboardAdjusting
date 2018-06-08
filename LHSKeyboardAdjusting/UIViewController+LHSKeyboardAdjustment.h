@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "LHSKeyboardAdjusting.h"
 
-typedef void (^LHSKeyboardAdjustingBlock)();
+typedef void (^LHSKeyboardAdjustingBlock)(void);
 
 @interface UIViewController (LHSKeyboardAdjustment) <LHSKeyboardAdjusting>
 
